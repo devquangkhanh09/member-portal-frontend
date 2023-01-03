@@ -1,0 +1,4 @@
+body {
+  background-image: -webkit-linear-gradient( 0deg, rgba(0, 0, 12, 0.9) 0%, hsla(0, 0%, 100%, 0.10) 100%), url("https://raw.githubusercontent.com/anduc146khmt/instruction-demo/master/img/IMG_1423.jpg");
+  background-size: cover;
+}
