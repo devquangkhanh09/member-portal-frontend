@@ -8,6 +8,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { useState } from 'react';
+import axios from 'axios';
 
 function Copyright(props: any) {
   return (
@@ -24,13 +26,19 @@ function Copyright(props: any) {
 
 
 export default function SignIn() {
+  const [signInError, setSignInError] = useState(false);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    axios
+      .post('/api/auth/signin', {
+        username: data.get('username'),
+        password: data.get('password')
+      })
+      .then(res => console.log(res.data))
+      .catch(err => setSignInError(true));
   };
 
   return (
@@ -78,6 +86,11 @@ export default function SignIn() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {signInError ? (
+              <Typography variant="body2" color="error">
+                <em>Incorrect username or password</em>
+              </Typography>
+            ) : null}
             <Button
               type="submit"
               fullWidth
