@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { Navigate } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
@@ -24,15 +25,41 @@ function Copyright(props: any) {
 
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [username, setUserName] = useState('');
+  const [password, setPassWord] = useState('');
+  const [redirect, setRedirect] = useState(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    await fetch('http://localhost:3001/api/auth/signin', {
+      method: 'POST',
+      headers: { 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      mode: 'no-cors', 
+      body: JSON.stringify({
+        username,
+        password
+      })
+    })
+    .then(function(response) {
+     console.log(response);
+     if(response.ok) {
+      setRedirect(true);
+     }
+  })
+  .catch(function(err) {
+    console.log(err);
+ })
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+      username,
+      password
     });
   };
-
+  if(redirect) {
+    return <Navigate to='/home' />
+  }
   return (
     <div style={{backgroundImage: "-webkit-linear-gradient( 0deg, rgba(0, 0, 12, 0.9) 0%, hsla(0, 0%, 100%, 0.10) 100%), url('https://raw.githubusercontent.com/anduc146khmt/instruction-demo/master/img/IMG_1423.jpg')", backgroundSize: "cover",   width: "100%", height: "100%", left: 0,
     top: 0, position: "fixed" }}>
@@ -63,6 +90,7 @@ export default function SignIn() {
               name="username"
               autoComplete="username"
               autoFocus
+              onChange={e=> setUserName(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -73,6 +101,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e=> setPassWord(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -88,12 +117,12 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" style={{textDecoration: 'none'}}>
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" style={{textDecoration: 'none'}}>
                   {"Contact Us"}
                 </Link>
               </Grid>
