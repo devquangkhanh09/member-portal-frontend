@@ -49,7 +49,7 @@ export default function SignIn() {
     })
   };
   if(redirect) {
-    return <Navigate to='/home' />
+    return <Navigate to='/profile' />
   }
   return (
     <div style={{backgroundImage: "-webkit-linear-gradient( 0deg, rgba(0, 0, 12, 0.9) 0%, hsla(0, 0%, 100%, 0.10) 100%), url('https://raw.githubusercontent.com/anduc146khmt/instruction-demo/master/img/IMG_1423.jpg')", backgroundSize: "cover",   width: "100%", height: "100%", left: 0,
