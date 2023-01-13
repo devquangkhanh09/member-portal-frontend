@@ -15,22 +15,32 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
-    name: "Nguyễn Đặng Anh Khoa",
-    username: "khoanda",
-    date_of_birth: "2002-04-10",
-    role: "Member",
-    board: "Communication",
-    student_ID: "2010339",
-    address:
-      "Phòng 25.16, Bcons Garden, Phố Lý Thường Kiệt, Phường Dĩ An, Dĩ An, Bình Dương",
-    email: "khoa.nguyenakaivn@hcmut.edu.vn",
-    phone_number: "0962646979",
-    major: "Computer Science",
-    faculty: "Faculty of Computer Science and Engineering",
+    "avatar": {
+      "url16": "",
+      "url48": "",
+      "url72": "",
+      "url144": "",
+      "url288": "",
+    },
+    "Key": "",
+    "Name": "",
+    "Created": "",
+    "Updated": "",
+    "Username": "",
+    "Date of birth": "",
+    "Role": "",
+    "Board": "",
+    "Student ID": "",
+    "Address": "",
+    "Email": "",
+    "Phone number": "",
+    "Major": "",
+    "Faculty": ""
   });
 
   useEffect(() => {
@@ -42,11 +52,13 @@ export default function ProfilePage() {
       })
       .then((res) => {
         var myInfo = res.data;
-        console.log(myInfo);
+        // ERROR: unauthorized 
+        console.log(Cookies.get());
+        Cookies.set('JSESSIONID', Cookies.get('JSESSIONID')!, {domain: 'jira.hpcc.vn'});
+        Cookies.set('atlassian.xsrf.token', Cookies.get('atlassian.xsrf.token')!, {domain: 'jira.hpcc.vn'});
         setProfileInfo(myInfo);
       })
       .catch((error) => {
-        console.log(localStorage.getItem("jwt"));
         console.log(error);
         navigate("/profile", { replace: true });
       });
@@ -84,8 +96,8 @@ export default function ProfilePage() {
                   }}
                 >
                   <Avatar
-                    alt="Remy Sharp"
-                    src="/avatar.png"
+                    alt="avatar"
+                    src={profileInfo['avatar'].url72}
                     sx={{
                       width: 120,
                       height: 120,
@@ -99,9 +111,9 @@ export default function ProfilePage() {
                     }}
                   >
                     <Typography variant="h5" sx={{ my: 2 }}>
-                      {profileInfo.name}
+                      {profileInfo["Name"]}
                     </Typography>
-                    <Chip label={profileInfo.board} color="success" />
+                    <Chip label={profileInfo["Board"]} color="success" />
                   </Box>
                 </Box>
                 <Button
@@ -123,13 +135,13 @@ export default function ProfilePage() {
               >
                 <Stack direction="row" spacing={2}>
                   <LocalPhoneOutlinedIcon />
-                  <Typography>{profileInfo.phone_number}</Typography>
+                  <Typography>{profileInfo["Phone number"]}</Typography>
                 </Stack>
 
                 <Stack direction="row" spacing={2}>
                   <EmailOutlinedIcon />
                   <Typography>
-                    <u>{profileInfo.email}</u>
+                    <u>{profileInfo["Email"]}</u>
                   </Typography>
                 </Stack>
               </Box>
@@ -137,16 +149,16 @@ export default function ProfilePage() {
               <Grid container sx={{ p: 1 }} columnSpacing={3}>
                 {[
                   [
-                    ["Date of Birth", profileInfo.date_of_birth],
-                    ["Full Name", profileInfo.name],
-                    ["Address", profileInfo.address],
-                    ["Phone", profileInfo.phone_number],
+                    ["Date of Birth", profileInfo["Date of birth"]],
+                    ["Full Name", profileInfo["Name"]],
+                    ["Address", profileInfo["Address"]],
+                    ["Phone", profileInfo["Phone number"]],
                   ],
                   [
-                    ["Role", profileInfo.role],
-                    ["Student ID", profileInfo.student_ID],
-                    ["Major", profileInfo.major],
-                    ["Falcuty", profileInfo.faculty],
+                    ["Role", profileInfo["Role"]],
+                    ["Student ID", profileInfo["Student ID"]],
+                    ["Major", profileInfo["Major"]],
+                    ["Falcuty", profileInfo["Faculty"]],
                   ],
                 ].map((col, idx) => (
                   <Grid item xs={6}>
