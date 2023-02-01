@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Box,
@@ -20,13 +20,7 @@ import Cookies from "js-cookie";
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
-    "avatar": {
-      "url16": "",
-      "url48": "",
-      "url72": "",
-      "url144": "",
-      "url288": "",
-    },
+    "avatar": "",
     "Key": "",
     "Name": "",
     "Created": "",
@@ -52,6 +46,7 @@ export default function ProfilePage() {
       })
       .then((res) => {
         var myInfo = res.data;
+        myInfo.avatar = myInfo.avatar.url72;
         // ERROR: unauthorized 
         console.log(Cookies.get());
         Cookies.set('JSESSIONID', Cookies.get('JSESSIONID')!, {domain: 'jira.hpcc.vn'});
@@ -97,11 +92,17 @@ export default function ProfilePage() {
                 >
                   <Avatar
                     alt="avatar"
-                    src={profileInfo['avatar'].url72}
+                    src={profileInfo['avatar']}
                     sx={{
                       width: 120,
                       height: 120,
                     }}
+                    imgProps={{onError: () => {
+                      setProfileInfo({
+                        ...profileInfo,
+                        avatar: "avatar.png"
+                      })
+                    }}}
                   />
                   <Box
                     sx={{

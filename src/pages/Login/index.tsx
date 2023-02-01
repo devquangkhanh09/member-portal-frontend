@@ -29,24 +29,26 @@ export default function SignIn() {
   const [username, setUserName] = useState('');
   const [password, setPassWord] = useState('');
   const [redirect, setRedirect] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await axios.post('/api/auth/signin', {
-      username,
-      password,
-    }, {
-      headers: { 
-        'Accept': 'application/json'
-      },
-    })
-    .then((response) => {
+    try {
+      const response = await axios.post('/api/auth/signin', {
+        username,
+        password,
+      }, {
+        headers: { 
+          'Accept': 'application/json'
+      }});
+  
       localStorage.setItem('jwt', response.data.token);
       setRedirect(true);
-    })
-    .catch((err) => {
+    } catch (err: any) {
       // TO-DO: handle error
       console.log(err);
-    })
+      if (err.response.status === 401) setErrorMessage('Incorrect username or password!');
+      else setErrorMessage(err.message);
+    }
   };
   if(redirect) {
     return <Navigate to='/profile' />
@@ -70,6 +72,9 @@ export default function SignIn() {
           <img src="https://raw.githubusercontent.com/anduc146khmt/instruction-demo/master/img/BIG%20DATA%20CLUB_logo.png" alt="logo" style={{width: "100px", height: "100px"}}/>
           <Typography component="h1" variant="h5">
             Sign in
+          </Typography>
+          <Typography color="red">
+            {errorMessage}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
