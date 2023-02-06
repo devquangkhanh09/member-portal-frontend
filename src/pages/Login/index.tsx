@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -26,8 +26,14 @@ function Copyright(props: any) {
 
 
 export default function SignIn() {
+  useEffect(() => {
+    if (localStorage.getItem('isRememberMe') === 'true' && localStorage.getItem('jwt') && localStorage.getItem('jwt') !== '')
+      setRedirect(true);
+  }, []);
+
   const [username, setUserName] = useState('');
   const [password, setPassWord] = useState('');
+  const [isRememberMe, setIsRememberMe] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -41,16 +47,16 @@ export default function SignIn() {
           'Accept': 'application/json'
       }});
   
+      localStorage.setItem('isRememberMe', isRememberMe? 'true':'false');
       localStorage.setItem('jwt', response.data.token);
       setRedirect(true);
     } catch (err: any) {
-      // TO-DO: handle error
       console.log(err);
       if (err.response.status === 401) setErrorMessage('Incorrect username or password!');
       else setErrorMessage(err.message);
     }
   };
-  if(redirect) {
+  if (redirect) {
     return <Navigate to='/profile' />
   }
   return (
@@ -100,7 +106,8 @@ export default function SignIn() {
               onChange={e=> setPassWord(e.target.value)}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox color="primary"
+                onChange={e => setIsRememberMe(e.target.checked)} />}
               label="Remember me"
             />
             <Button

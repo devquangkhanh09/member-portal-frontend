@@ -85,7 +85,7 @@ export default function SideBar() {
 
 
   const handleDrawerClose = () => {
-    setOpen(true);
+    setOpen(false);
   };
 
   return (
@@ -152,7 +152,10 @@ export default function SideBar() {
             ["Logout", ""],
           ].map((item, index) => (
             <ListItem key={index} disablePadding>
-              <ListItemButton onClick={() => navigate(`/${item[1]}`)}>
+              <ListItemButton onClick={() => {
+                if (item[0] === "Logout") localStorage.removeItem('jwt');
+                navigate(`/${item[1]}`);
+              }}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <AccountBoxIcon /> : <LogoutIcon />}
                 </ListItemIcon>

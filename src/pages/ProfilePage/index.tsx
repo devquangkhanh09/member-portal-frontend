@@ -55,7 +55,7 @@ export default function ProfilePage() {
       })
       .catch((error) => {
         console.log(error);
-        navigate("/profile", { replace: true });
+        navigate("/", { replace: true });
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
